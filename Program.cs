@@ -22,6 +22,7 @@ namespace BlogsConsole
             {
                 if (name == "")
                 {
+                    logger.Error("Blog name can not be null!");
                     Console.WriteLine("Please enter a name for the blog!");
                 }
                 else
