@@ -64,7 +64,8 @@ namespace BlogsConsole
                     if(query.Count() == 1)
                     {
 
-                        Console.WriteLine($"{query[0].BlogId,-10}{query[0].Name}\n");
+                        //Console.WriteLine($"{query[0].BlogId,-10}{query[0].Name}\n");
+                        db.DisplayBlogs(query);
                         bID = query[0].BlogId;
                     }
                     else if(query.Count == 0)
@@ -74,14 +75,13 @@ namespace BlogsConsole
                     }
                     else
                     {
-                        foreach (var item in query)
-                        {
-                            Console.WriteLine($"{item.BlogId,-10}{item.Name}\n");
-                        }
+                        db.DisplayBlogs(query);
 
                         Console.WriteLine("Multiple results found. Enter the blog ID to post to (1) or press any other key to go back");
+
                         if (keyPress.Key == ConsoleKey.D1 || keyPress.Key == ConsoleKey.NumPad1)
                         {
+                            //candidate for menu class
                             while (true)
                             {
                                 Console.WriteLine("What is the blog ID?");
@@ -97,6 +97,7 @@ namespace BlogsConsole
                                 }
                             }
                         }
+                        //If any other key was pressed
                         else
                         {
                             //Go to end of method to loop back
@@ -122,17 +123,8 @@ namespace BlogsConsole
                 if(db.Verify(bID))
                 {
 
-                    Console.WriteLine("What is the title of your post?");
-                    string title = Console.ReadLine();
-                    Console.WriteLine("");
-                    Console.WriteLine("Enter your post's content.");
-                    string content = Console.ReadLine();
-                    Console.WriteLine("");
-
-                    var post = new Post { BlogId = bID, Title = title, Content = content };
-
-                    db.AddPost(post);
-                    logger.Info("Post added - {name}", post.Title);
+                    Post newPost = db.AddPost(bID);
+                    logger.Info("Post added - {name}", newPost.Title);
                 }
                 else
                 {
@@ -142,12 +134,27 @@ namespace BlogsConsole
                 }
 
             }
+            else if (keyPress.Key == ConsoleKey.D4 || keyPress.Key == ConsoleKey.NumPad4)
+            {
+
+                string[] decision = navMenu.displayPostsMenu();
+
+                if(decision[0] == "all")
+                {
+                    db.DisplayAllPosts();
+                }
+                else if(decision[0] == "one")
+                {
+
+                }
+            }
             //If a non-existant menu option was entered
             else
             {
                 logger.Warn("A valid option was not entered.");
                 Console.WriteLine("Please enter a valid option.");
             }
+
         //label to travel to end of method in order to loop back to the top menu.
         dropback:;
         }
@@ -165,8 +172,9 @@ namespace BlogsConsole
                     Console.WriteLine("Press 1 to view the list of blogs");
                     Console.WriteLine("Press 2 to create a blog");
                     Console.WriteLine("Press 3 to create a post");
+                    Console.WriteLine("Press 4 to view posts");
 
-                    Console.WriteLine("Press the ESC key to exit");
+                    Console.WriteLine("\nPress the ESC key to exit");
 
                     ConsoleKeyInfo keyPress = Console.ReadKey();
                     Console.WriteLine("");

@@ -54,5 +54,31 @@ namespace BlogsConsole.Traversal
                 return blank;
             }
         }
+
+        public string[] displayPostsMenu()
+        {
+            Console.WriteLine("Display all blogs and posts (1) \nDisplay posts for a specific blog (2) \nAny other key will take you back");
+            ConsoleKeyInfo keyPress = Console.ReadKey();
+
+            if (keyPress.Key == ConsoleKey.D1 || keyPress.Key == ConsoleKey.NumPad1)
+            {
+                string[] dAll = { "all", "" };
+                return dAll;
+            }
+            else if (keyPress.Key == ConsoleKey.D2 || keyPress.Key == ConsoleKey.NumPad2)
+            {
+                Console.WriteLine("\nWhat is the name of the blog that you want to view posts for?");
+                string blog = Console.ReadLine();
+
+                string[] dOne = { "one", blog };
+                return dOne;
+
+            }
+            else
+            {
+                string[] dNone = { "none", "" };
+                return dNone;
+            }
+        }
     }
 }
