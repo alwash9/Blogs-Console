@@ -18,9 +18,21 @@ namespace BlogsConsole
             // Create and save a new Blog
             Console.Write("Enter a name for a new Blog: ");
             var name = Console.ReadLine();
-            var blog = new Blog { Name = name };
-            db.AddBlog(blog);
-            logger.Info("Blog added - {name}", name); 
+            while (true)
+            {
+                if (name == "")
+                {
+                    Console.WriteLine("Please enter a name for the blog!");
+                }
+                else
+                {
+                    var blog = new Blog { Name = name };
+                    db.AddBlog(blog);
+                    logger.Info("Blog added - {name}", name);
+                    break;
+                }
+            }
+
         }
 
         //Attempt at organizing the code better. Top menu was meant to send key press here in an attempt at abstraction.
@@ -136,17 +148,38 @@ namespace BlogsConsole
             }
             else if (keyPress.Key == ConsoleKey.D4 || keyPress.Key == ConsoleKey.NumPad4)
             {
-
-                string[] decision = navMenu.displayPostsMenu();
-
-                if(decision[0] == "all")
+                try
                 {
-                    db.DisplayAllPosts();
-                }
-                else if(decision[0] == "one")
-                {
+                    string[] decision = navMenu.displayPostsMenu();
+
+                    if (decision[0] == "all")
+                    {
+                        db.DisplayAllBlogPosts();
+                    }
+                    else if (decision[0] == "one")
+                    {
+                        var blogList = db.SearchBlogs(decision[1]);
+
+                        if (blogList.Count() == 0)
+                        {
+                            Console.WriteLine("No blogs found");
+                        }
+                        else
+                        {
+                            db.DisplayBlogPosts(blogList);
+                        }
+                    }
+                    else
+                    {
+                        goto dropback;
+                    }
 
                 }
+                catch(Exception ex)
+                {
+                    logger.Error(ex.Message);
+                }
+
             }
             //If a non-existant menu option was entered
             else

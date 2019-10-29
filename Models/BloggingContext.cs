@@ -25,14 +25,22 @@ namespace BlogsConsole.Models
 
             var query = this.Blogs.OrderBy(b => b.BlogId);
 
-
-            Console.WriteLine("\nAll blogs in the database: {0} found", query.Count());
-
-            Console.WriteLine($"{"Blog ID",-10}Blog Name\n");
-            foreach (var item in query)
+            if(query.Count() == 0)
             {
-                Console.WriteLine($"{item.BlogId, -10}{item.Name}\n");
+                Console.WriteLine("No blogs exist in database.\n");
             }
+            else
+            {
+                Console.WriteLine("\nAll blogs in the database: {0} found", query.Count());
+
+                Console.WriteLine($"{"Blog ID",-10}Blog Name\n");
+                foreach (var item in query)
+                {
+                    Console.WriteLine($"{item.BlogId,-10}{item.Name}\n");
+                }
+
+            }
+
 
         }
 
@@ -59,10 +67,17 @@ namespace BlogsConsole.Models
 
         }
 
-        //Search for a blog name
+        //Search for a blog name returns a list
         public List<Blog> SearchBlogs (string searchName)
         {
             var searchResult = this.Blogs.Where(b => b.Name.Contains(searchName)).ToList();
+            return searchResult;
+        }
+
+        //Search for a blog name returns a IQueryable
+        public IQueryable<Blog> SearchBlogs(string searchName, bool x)
+        {
+            var searchResult = this.Blogs.Where(b => b.Name.Contains(searchName));
             return searchResult;
         }
 
@@ -94,26 +109,59 @@ namespace BlogsConsole.Models
             return post;
         }
 
-        public void DisplayAllPosts()
+        public void DisplayAllBlogPosts() //Would like to make blogs an optional parameter, but because of LINQ's compile time stuff, I can't.
         {
-            var blogs = this.Blogs.OrderBy(b => b.BlogId);
+            var blogs = this.Blogs.OrderBy(b => b.BlogId).ToList();
+            Console.WriteLine("{0} blog/s in the database\n", blogs.Count());
 
             foreach (var item in blogs)
             {
-                var posts = this.Posts.OrderBy(p => p.PostId).Where(p => p.BlogId == item.BlogId);
+                var posts = this.Posts.OrderBy(p => p.PostId).Where(p => p.BlogId == item.BlogId).ToList();
 
-                Console.WriteLine($"{item.BlogId, 15}{item.Name, 15}");
+                Console.WriteLine($"BLOG: {item.BlogId}{"",5}{item.Name}");
+                if (posts.Count() == 0)
+                {
+                    Console.WriteLine("NO POST WERE MADE TO THIS BLOG YET.\n");
+                }
+
 
                 foreach (var post in posts)
                 {
-                    Console.WriteLine($"{post.PostId, 10}{post.Title, 10}");
-                    Console.WriteLine($"{post.Content, -5}");
+                    Console.WriteLine($"POST: {post.PostId}{"", 5}{post.Title}");
+                    Console.WriteLine($"{"", 2}{post.Content, 5}\n");
                 }
 
             }
 
-            Console.WriteLine("\nEND OF LIST!");
+            Console.WriteLine("\nEND OF LIST!\n");
 
+        }
+
+        public void DisplayBlogPosts(List<Blog> blogs)
+        {
+            if(blogs.Count() != 1)
+            {
+                Console.WriteLine("{0} blogs found\n", blogs.Count());
+            }
+            foreach (var item in blogs)
+            {
+                var posts = this.Posts.OrderBy(p => p.PostId).Where(p => p.BlogId == item.BlogId).ToList();
+
+                Console.WriteLine($"BLOG: {item.BlogId}{"",5}{item.Name}");
+                if (posts.Count() == 0)
+                {
+                    Console.WriteLine("NO POST WERE MADE TO THIS BLOG YET.\n");
+                }
+
+
+                foreach (var post in posts)
+                {
+                    Console.WriteLine($"POST: {post.PostId}{"",5}{post.Title}");
+                    Console.WriteLine($"{"",2}{post.Content,5}\n");
+                }
+
+            }
+            Console.WriteLine("\n");
         }
 
     }
