@@ -127,8 +127,7 @@ namespace BlogsConsole.Models
 
                 foreach (var post in posts)
                 {
-                    Console.WriteLine($"POST: {post.PostId}{"", 5}{post.Title}");
-                    Console.WriteLine($"{"", 2}{post.Content, 5}\n");
+                    this.DisplayPostFormat(post);
                 }
 
             }
@@ -156,13 +155,44 @@ namespace BlogsConsole.Models
 
                 foreach (var post in posts)
                 {
-                    Console.WriteLine($"POST: {post.PostId}{"",5}{post.Title}");
-                    Console.WriteLine($"{"",2}{post.Content,5}\n");
+                    this.DisplayPostFormat(post);
                 }
 
             }
             Console.WriteLine("\n");
         }
+
+        public void DisplayBlogPosts(int blogID)
+        {
+            var blog = this.Blogs.Where(b => b.BlogId == blogID).ToList();
+            var posts = this.Posts.OrderBy(p => p.PostId).Where(p => p.BlogId == blogID).ToList();
+
+            Console.WriteLine($"BLOG: {blog[0].BlogId}{"",5}{blog[0].Name}");
+
+            if (posts.Count() == 0)
+            {
+                Console.WriteLine("NO POST WERE MADE TO THIS BLOG YET.\n");
+            }
+            else
+            {
+                foreach (var post in posts)
+                {
+                    this.DisplayPostFormat(post);
+                }
+
+            }
+
+
+            Console.WriteLine("\n");
+        }
+
+        public void DisplayPostFormat(Post post)
+        {
+            Console.WriteLine($"{"",3}POST: {post.PostId}{"",5}{post.Title}");
+            Console.WriteLine($"{"",5}{post.Content,5}\n");
+
+        }
+
 
     }
 }

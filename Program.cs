@@ -77,44 +77,36 @@ namespace BlogsConsole
                     if(query.Count() == 1)
                     {
 
-                        //Console.WriteLine($"{query[0].BlogId,-10}{query[0].Name}\n");
                         db.DisplayBlogs(query);
-                        bID = query[0].BlogId;
+                        if (navMenu.CorrectBlogCheck())
+                        {
+                            bID = query[0].BlogId;
+                        }
+                        else
+                        {
+                            goto postsRetry;
+                        }
                     }
+                    //If None are found, go back.
                     else if(query.Count == 0)
                     {
                         Console.WriteLine("No blogs found. Please try again");
                         goto postsRetry;
                     }
+                    //select from a list and store blog id.
                     else
                     {
                         db.DisplayBlogs(query);
 
-                        Console.WriteLine("Multiple results found. Enter the blog ID to post to (1) or press any other key to go back");
+                        int choice = navMenu.MultipleBlogSelection(query);
 
-                        if (keyPress.Key == ConsoleKey.D1 || keyPress.Key == ConsoleKey.NumPad1)
+                        if (choice == -1)
                         {
-                            //candidate for menu class
-                            while (true)
-                            {
-                                Console.WriteLine("What is the blog ID?");
-                                string inputID = Console.ReadLine();
-                                Console.WriteLine("");
-                                if (!int.TryParse(inputID, out bID))
-                                {
-                                    Console.WriteLine("Entry not valid. Try again.");
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
+                            goto postsRetry;
                         }
-                        //If any other key was pressed
                         else
                         {
-                            //Go to end of method to loop back
-                            goto dropback;
+                            bID = query[choice].BlogId;
                         }
                     }
                 }
@@ -123,7 +115,7 @@ namespace BlogsConsole
                     //if the blog ID is invalid jump back up to try again
                     if (!int.TryParse(findBlog[1], out bID))
                     {
-                        Console.WriteLine("Entry not valid. Please try again");
+                        logger.Error("Entry not valid. Make sure the entry is a number. Please try again");
                         goto postsRetry;
                     }
                 }
@@ -151,7 +143,7 @@ namespace BlogsConsole
             {
                 try
                 {
-                    string[] decision = navMenu.displayPostsMenu();
+                    string[] decision = navMenu.DisplayPostsMenu();
 
                     if (decision[0] == "all")
                     {
@@ -163,12 +155,32 @@ namespace BlogsConsole
 
                         if (blogList.Count() == 0)
                         {
-                            Console.WriteLine("No blogs found");
+                            logger.Error("No blogs found");
                         }
                         else
                         {
                             db.DisplayBlogPosts(blogList);
                         }
+                    }
+                    else if (decision[0] == "id")
+                    {
+                        if(int.TryParse(decision[1], out int bID))
+                        {
+                            if (db.Verify(bID))
+                            {
+                                db.DisplayBlogPosts(bID);
+                            }
+                            else
+                            {
+                                logger.Error("The blog ID was not found.");
+                            }
+
+                        }
+                        else
+                        {
+                            logger.Error("Blog ID entered is not valid.");
+                        }
+
                     }
                     else
                     {
