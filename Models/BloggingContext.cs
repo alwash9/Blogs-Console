@@ -109,16 +109,18 @@ namespace BlogsConsole.Models
             return post;
         }
 
+        //Displays all the blogs and their posts
         public void DisplayAllBlogPosts() //Would like to make blogs an optional parameter, but because of LINQ's compile time stuff, I can't.
         {
             var blogs = this.Blogs.OrderBy(b => b.BlogId).ToList();
             Console.WriteLine("{0} blog/s in the database\n", blogs.Count());
 
-            foreach (var item in blogs)
+            foreach (var blog in blogs)
             {
-                var posts = this.Posts.OrderBy(p => p.PostId).Where(p => p.BlogId == item.BlogId).ToList();
+                var posts = this.Posts.OrderBy(p => p.PostId).Where(p => p.BlogId == blog.BlogId).ToList();
 
-                Console.WriteLine($"BLOG: {item.BlogId}{"",5}{item.Name}");
+                DisplayBlogFormat(blog);
+
                 if (posts.Count() == 0)
                 {
                     Console.WriteLine("NO POST WERE MADE TO THIS BLOG YET.\n");
@@ -136,17 +138,18 @@ namespace BlogsConsole.Models
 
         }
 
+        //Displays a list of blogs and their posts
         public void DisplayBlogPosts(List<Blog> blogs)
         {
             if(blogs.Count() != 1)
             {
                 Console.WriteLine("{0} blogs found\n", blogs.Count());
             }
-            foreach (var item in blogs)
+            foreach (var blog in blogs)
             {
-                var posts = this.Posts.OrderBy(p => p.PostId).Where(p => p.BlogId == item.BlogId).ToList();
+                var posts = this.Posts.OrderBy(p => p.PostId).Where(p => p.BlogId == blog.BlogId).ToList();
 
-                Console.WriteLine($"BLOG: {item.BlogId}{"",5}{item.Name}");
+                DisplayBlogFormat(blog);
                 if (posts.Count() == 0)
                 {
                     Console.WriteLine("NO POST WERE MADE TO THIS BLOG YET.\n");
@@ -162,12 +165,13 @@ namespace BlogsConsole.Models
             Console.WriteLine("\n");
         }
 
+        //Displays a single blog and its posts
         public void DisplayBlogPosts(int blogID)
         {
             var blog = this.Blogs.Where(b => b.BlogId == blogID).ToList();
             var posts = this.Posts.OrderBy(p => p.PostId).Where(p => p.BlogId == blogID).ToList();
 
-            Console.WriteLine($"BLOG: {blog[0].BlogId}{"",5}{blog[0].Name}");
+            DisplayBlogFormat(blog[0]);
 
             if (posts.Count() == 0)
             {
@@ -186,6 +190,13 @@ namespace BlogsConsole.Models
             Console.WriteLine("\n");
         }
 
+        //Controls the format for displaying blogs.
+        public void DisplayBlogFormat(Blog blog)
+        {
+            Console.WriteLine($"BLOG: {blog.BlogId}{"",5}{blog.Name}");
+        }
+
+        //Controls the format for displaying posts.
         public void DisplayPostFormat(Post post)
         {
             Console.WriteLine($"{"",3}POST: {post.PostId}{"",5}{post.Title}");

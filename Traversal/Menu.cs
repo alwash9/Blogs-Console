@@ -60,7 +60,7 @@ namespace BlogsConsole.Traversal
             }
         }
 
-        //Menu to display post. 
+        //Menu to display post. Retunrs an array that denotes the choice and input if applicable.
         public string[] DisplayPostsMenu()
         {
             Console.WriteLine("Display all blogs and posts (1) \nDisplay posts for a specific blog (2) \nAny other key will take you back");
@@ -113,6 +113,7 @@ namespace BlogsConsole.Traversal
             }
         }
 
+        //Checks that when one blog is found, that it is the one that the user wants to use.
         public bool CorrectBlogCheck()
         {
             Console.WriteLine("\nIs this the correct blog.");
@@ -130,6 +131,7 @@ namespace BlogsConsole.Traversal
             }
         }
 
+        //Shows the blogs that were found and allows the user to pick the intended one
         public int MultipleBlogSelection(List<Blog> query)
         {
             
@@ -146,10 +148,10 @@ namespace BlogsConsole.Traversal
 
             NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+            //Loops if the input was not a number. The BloggingContext Verify method with ensure that the blog actually exists.
             while (true)
             {
                 string choice = Console.ReadLine();
-
 
                 if (int.TryParse(choice, out int blogPick))
                 {

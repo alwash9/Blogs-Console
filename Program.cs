@@ -16,10 +16,11 @@ namespace BlogsConsole
         public static void CreateBlog()
         {
             // Create and save a new Blog
-            Console.Write("Enter a name for a new Blog: ");
-            var name = Console.ReadLine();
             while (true)
             {
+                Console.Write("Enter a name for a new Blog: ");
+                var name = Console.ReadLine();
+
                 //If entered name is blank, give error
                 if (name == "")
                 {
