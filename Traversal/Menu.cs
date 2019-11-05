@@ -11,25 +11,28 @@ namespace BlogsConsole.Traversal
     public class Menu
     {
 
-        //In order to have everything loop, I have to put this back in the main
+        //Top menu
+        public ConsoleKeyInfo TopMenuSelection()
+        {
+            Console.WriteLine("Please Choose an option.");
+            Console.WriteLine("Press 1 to view the list of blogs");
+            Console.WriteLine("Press 2 to create a blog");
+            Console.WriteLine("Press 3 to create a post");
+            Console.WriteLine("Press 4 to view posts");
 
-        //public ConsoleKeyInfo TopMenuSelection()
-        //{
-        //    Console.WriteLine("Please Choose an option.");
-        //    Console.WriteLine("Press 1 to view the list of blogs");
-        //    Console.WriteLine("Press 2 to create a blog");
-        //    Console.WriteLine("Press 3 to create a post");
+            Console.WriteLine("\nPress the ESC key to exit");
 
-        //    ConsoleKeyInfo keyPress = Console.ReadKey();
+            ConsoleKeyInfo keyPress = Console.ReadKey();
+            Console.WriteLine("");
 
-        //    Console.WriteLine("");
+            return keyPress;
 
-        //    return keyPress;
 
-        //}
+        }
 
         //Menu for making a post. Returns an array with a number for which option was chosen and either the name to search or the blog ID to post to.
-        public string[] PostMenuSelection()
+        //Or nothing in order to go to previous menu.
+        public string[] CreatePostMenuSelection()
         {
             Console.WriteLine("Would you like to find a Blog to post to (1)\nOr enter the Blog ID if you know it (2)\nAny other key will take you to the previous menu.");
             ConsoleKeyInfo keyPress = Console.ReadKey();
@@ -57,6 +60,7 @@ namespace BlogsConsole.Traversal
             }
         }
 
+        //Menu to display post. 
         public string[] DisplayPostsMenu()
         {
             Console.WriteLine("Display all blogs and posts (1) \nDisplay posts for a specific blog (2) \nAny other key will take you back");

@@ -12,7 +12,7 @@ namespace BlogsConsole
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static BloggingContext db = new BloggingContext();
 
-
+        //Handle blog creation
         public static void CreateBlog()
         {
             // Create and save a new Blog
@@ -20,6 +20,7 @@ namespace BlogsConsole
             var name = Console.ReadLine();
             while (true)
             {
+                //If entered name is blank, give error
                 if (name == "")
                 {
                     logger.Error("Blog name can not be null!");
@@ -66,9 +67,9 @@ namespace BlogsConsole
             //label for retrying. alternative to infinite looping
             postsRetry:
 
-                string[] findBlog = navMenu.PostMenuSelection();
+                string[] findBlog = navMenu.CreatePostMenuSelection();
 
-                //searches for blog and gives opportunity to enter blog ID
+                //searches for blog to post to
                 if(findBlog[0] == "1")
                 {
                     var query = db.SearchBlogs(findBlog[1]);
@@ -110,6 +111,7 @@ namespace BlogsConsole
                         }
                     }
                 }
+                //Enter the blog id to post to
                 else if(findBlog[0] == "2")
                 {
                     //if the blog ID is invalid jump back up to try again
@@ -143,6 +145,7 @@ namespace BlogsConsole
             {
                 try
                 {
+                    //prompts for display of all blogs and post or specific ones.
                     string[] decision = navMenu.DisplayPostsMenu();
 
                     if (decision[0] == "all")
@@ -209,21 +212,14 @@ namespace BlogsConsole
             logger.Info("Program started");
             try
             {
+
                 Menu menu = new Menu { };
 
-                //Top menu
+                //loop menu until escape is pressed
                 while (true)
                 {
-                    Console.WriteLine("Please Choose an option.");
-                    Console.WriteLine("Press 1 to view the list of blogs");
-                    Console.WriteLine("Press 2 to create a blog");
-                    Console.WriteLine("Press 3 to create a post");
-                    Console.WriteLine("Press 4 to view posts");
 
-                    Console.WriteLine("\nPress the ESC key to exit");
-
-                    ConsoleKeyInfo keyPress = Console.ReadKey();
-                    Console.WriteLine("");
+                    ConsoleKeyInfo keyPress = menu.TopMenuSelection();
 
                     if (keyPress.Key == ConsoleKey.Escape)
                     {
@@ -231,6 +227,7 @@ namespace BlogsConsole
                     }
                     else
                     {
+                        //Go to navigation
                         Navigation(keyPress);
                     }
 
