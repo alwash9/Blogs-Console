@@ -3,6 +3,6 @@
     <connectionStrings>
         <add name="BlogContext" 
             providerName="System.Data.SqlClient" 
-            connectionString="Server=bitsql.wctc.edu;Database=BlogsConsole_##_XYZ;User ID=XXXX;Password=YYYY"/>
+            connectionString="Server=bitsql.wctc.edu;Database=BlogsConsole_10115_XYZ;User ID=XXXX;Password=YYYY"/>
     </connectionStrings>
 </configuration>
